@@ -37,7 +37,6 @@ public final class UF {
 		uf.connect(0, 5);
 		uf.connect(1, 9);
 
-		range(0, 10).forEach(uf::parent);
 		System.out.println(uf.connectedComponent());
 	}
 }
