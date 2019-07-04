@@ -5,11 +5,10 @@ public final class UF {
 
 	public UF(int n) {
 		this.cache = range(0, n).toArray();
-
 	}
 
 	public void connect(int a, int b) {
-		cache[parent(b)] = parent(a);
+		cache[parent(b)] = cache[a];
 	}
 
 	public boolean connected(int a, int b) {
@@ -28,13 +27,13 @@ public final class UF {
 	public static void main(String[] args) {
 		UF uf = new UF(10);
 
+		uf.connect(5, 6);
+		uf.connect(0, 5);
 		uf.connect(1, 2);
 		uf.connect(3, 4);
-		uf.connect(5, 6);
 		uf.connect(7, 8);
 		uf.connect(7, 9);
 		uf.connect(2, 8);
-		uf.connect(0, 5);
 		uf.connect(1, 9);
 
 		System.out.println(uf.connectedComponent());
