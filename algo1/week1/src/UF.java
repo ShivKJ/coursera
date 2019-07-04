@@ -1,3 +1,4 @@
+import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
 public final class UF {
@@ -21,13 +22,23 @@ public final class UF {
 		return a == p ? a : (cache[a] = parent(p));
 	}
 
+	public int connectedComponent() {
+		return (int) range(0, cache.length).map(this::parent).distinct().count();
+	}
+
 	public static void main(String[] args) {
-		UF uf = new UF(5);
+		UF uf = new UF(10);
 
-		uf.connect(0, 1);
 		uf.connect(1, 2);
-		uf.connect(3, 2);
+		uf.connect(3, 4);
+		uf.connect(5, 6);
+		uf.connect(7, 8);
+		uf.connect(7, 9);
+		uf.connect(2, 8);
+		uf.connect(0, 5);
+		uf.connect(1, 9);
 
-		System.out.println(uf.connected(2, 3));
+		range(0, 10).forEach(uf::parent);
+		System.out.println(uf.connectedComponent());
 	}
 }
