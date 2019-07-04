@@ -5,7 +5,7 @@ public final class UF {
 
 	public UF(int n) {
 		this.cache = range(0, n).toArray();
-		
+
 	}
 
 	public void connect(int a, int b) {
