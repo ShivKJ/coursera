@@ -1,27 +1,61 @@
+import static java.lang.System.out;
 import static java.util.stream.IntStream.range;
 
 public final class UF {
-	private final int[] cache;
+	/**
+	 * Storing parent of i^th node.
+	 */
+	private final int[] parent;
 
 	public UF(int n) {
-		this.cache = range(0, n).toArray();
+		this.parent = range(0, n).toArray();
 	}
 
+	/**
+	 * connects the two node a and b.
+	 * 
+	 * It makes parent of root node of b to parent of a
+	 * 
+	 * @param a
+	 * @param b
+	 */
 	public void connect(int a, int b) {
-		cache[parent(b)] = cache[a];
+		parent[root(b)] = parent[a];
 	}
 
+	/**
+	 * finds if node a and b are connected that is if they have same root node.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public boolean connected(int a, int b) {
-		return parent(a) == parent(b);
+		return root(a) == root(b);
 	}
 
-	public int parent(int a) {
-		int p = cache[a];
-		return a == p ? a : (cache[a] = parent(p));
+	/**
+	 * finds root of node a. A node is root if it is parent of itself.
+	 * 
+	 * @param a
+	 * @return
+	 */
+	public int root(int a) {
+		while (a != parent[a]) {
+			parent[a] = parent[parent[a]];
+			a = parent[a];
+		}
+
+		return a;
 	}
 
+	/**
+	 * finds connected component in given nodes.
+	 * 
+	 * @return
+	 */
 	public int connectedComponent() {
-		return (int) range(0, cache.length).map(this::parent).distinct().count();
+		return (int) range(0, parent.length).map(this::root).distinct().count();
 	}
 
 	public static void main(String[] args) {
@@ -36,6 +70,6 @@ public final class UF {
 		uf.connect(2, 8);
 		uf.connect(1, 9);
 
-		System.out.println(uf.connectedComponent());
+		out.println(uf.connectedComponent());
 	}
 }
