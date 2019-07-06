@@ -1,89 +1,100 @@
-import static java.util.Arrays.stream;
-import static java.util.stream.Stream.generate;
+import static java.util.Arrays.fill;
 
-import java.util.Random;
-import java.util.function.BooleanSupplier;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-	private final int         n;
-	private final UF          uf;
-	private final boolean[][] blocked;
+	private final int                  n;
+	private final WeightedQuickUnionUF uf;
+	private final boolean[]            blocked;
+	private int                        openSites;
 
-	private Percolation(boolean[][] blocked) {
-		this.n = blocked.length;
-		this.uf = new UnionFind(n * n + 2);
-		this.blocked = stream(blocked).map(boolean[]::clone)
-		                              .toArray(boolean[][]::new);
+	public Percolation(int n) {
+		this.n = n;
+		this.uf = new WeightedQuickUnionUF(n * n + 2);
+		this.blocked = blocked(n * n + 2);
 	}
 
-	public static boolean percolates(boolean[][] blocked) {
-		int n = blocked.length;
+	public void open(int i, int j) {
+		int index = index(i, j);
 
-		Percolation percolation = new Percolation(blocked);
-		percolation.process();
+		if (isOpen(i, j))
+			return;
 
-		int up = n * n;
+		blocked[index] = false;
+		openSites++;
 
-		return percolation.uf.connected(up, up + 1);
-	}
-
-	public static boolean percolates(int n, double blockingProbability) {
-		Random random = new Random();
-
-		BooleanSupplier isBlocked = () -> random.nextDouble() <= blockingProbability;
-
-		boolean[][] blocked = generate(() -> row(n, isBlocked)).limit(n)
-		                                                       .toArray(boolean[][]::new);
+		tryConnectUp(i, j);
+		tryConnectLeft(i, j);
+		tryConnectRight(i, j);
+		tryConnectDown(i, j);
 		
-		return percolates(blocked);
 	}
 
-	private static boolean[] row(int n, BooleanSupplier predicate) {
-		boolean[] arr = new boolean[n];
-
-		for (int i = 0; i < n; i++)
-			arr[i] = predicate.getAsBoolean();
-
-		return arr;
-
+	public boolean isOpen(int i, int j) {
+		return !blocked[index(i, j)];
 	}
 
-	private void process() {
-		for (int i = 0; i < n; i++) {
-			if (!blocked[0][i])
-				connectToUp(i);
-
-			for (int j = 0; j < n; j++)
-				if (!blocked[i][j]) {
-					if (j > 0 && !blocked[i][j - 1])
-						connect(i, j, i, j - 1);
-
-					if (j < n - 1 && !blocked[i][j + 1])
-						connect(i, j, i, j + 1);
-
-					if (i < n - 1 && !blocked[i + 1][j])
-						connect(i, j, i + 1, j);
-
-				}
-
-			if (!blocked[n - 1][i])
-				connectToDown(i);
-		}
+	public boolean isFull(int i, int j) {
+		return uf.connected(n * n, index(i, j));
 	}
 
-	private int index(int a, int b) {
-		return n * a + b;
+	public int numberOfOpenSites() {
+		return openSites;
+	}
+
+	public boolean percolates() {
+		return uf.connected(n * n, n * n + 1);
+	}
+
+	private int index(int i, int j) {
+		return n * (i - 1) + j - 1;
 	}
 
 	private void connect(int a1, int b1, int a2, int b2) {
-		uf.connect(index(a1, b1), index(a2, b2));
+		uf.union(index(a1, b1), index(a2, b2));
 	}
 
-	private void connectToDown(int c) {
-		connect(n, 1, n - 1, c);
+	private void connectToDownSentinal(int c) {
+		connect(n + 1, 2, n, c);
 	}
 
-	private void connectToUp(int c) {
-		connect(n, 0, 0, c);
+	private void connectToUpSentinal(int c) {
+		connect(n + 1, 1, 1, c);
 	}
+
+	private void tryConnectUp(int i, int j) {
+		if (i == 1)
+			connectToUpSentinal(j);
+		else if (isOpen(i - 1, j))
+			connect(i, j, i - 1, j);
+
+	}
+
+	private void tryConnectLeft(int i, int j) {
+		if (j > 1 && isOpen(i, j - 1))
+			connect(i, j, i, j - 1);
+	}
+
+	private void tryConnectRight(int i, int j) {
+		if (j < n && isOpen(i, j + 1))
+			connect(i, j, i, j + 1);
+	}
+
+	private void tryConnectDown(int i, int j) {
+
+		if (i == n)
+			connectToDownSentinal(j);
+		else if (isOpen(i + 1, j))
+			connect(i, j, i + 1, j);
+
+	}
+
+	private static boolean[] blocked(int n) {
+		boolean[] out = new boolean[n];
+
+		fill(out, true);
+
+		return out;
+	}
+
 }
