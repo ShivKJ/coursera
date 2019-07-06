@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<T> implements Iterable<T> {
-    T[] items;
-    int size;
+    private T[] items;
+    private int size;
 
     @SuppressWarnings("unchecked")
     public RandomizedQueue() {
