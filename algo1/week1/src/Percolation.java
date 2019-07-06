@@ -16,7 +16,7 @@ public class Percolation {
     }
 
     public void open(int i, int j) {
-        isValidIndex(i, j);
+        validateIndex(i, j);
 
         if (isOpen(i, j))
             return;
@@ -32,13 +32,13 @@ public class Percolation {
     }
 
     public boolean isOpen(int i, int j) {
-        isValidIndex(i, j);
+        validateIndex(i, j);
 
         return !blocked[index(i, j)];
     }
 
     public boolean isFull(int i, int j) {
-        isValidIndex(i, j);
+        validateIndex(i, j);
 
         return uf.connected(upSentinal, index(i, j));
     }
@@ -104,17 +104,17 @@ public class Percolation {
 
     public static int numberGreaterThanZero(int n) {
         if (n < 1)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Number must be greater than 0. Given n=" + n);
 
         return n;
     }
 
-    private void isValidIndex(int i, int j) {
-        isValidIndex(i);
-        isValidIndex(j);
+    private void validateIndex(int i, int j) {
+        validateIndex(i);
+        validateIndex(j);
     }
 
-    private void isValidIndex(int i) {
+    private void validateIndex(int i) {
         if (i < 1 || i > n)
             throw new IllegalArgumentException("row/column=" + i);
     }
