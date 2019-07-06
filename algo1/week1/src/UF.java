@@ -1,4 +1,4 @@
-package others;
+
 
 public interface UF {
 	void connect(int a, int b);
