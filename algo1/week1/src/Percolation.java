@@ -102,7 +102,7 @@ public class Percolation {
 		return out;
 	}
 
-	private static int numberGreaterThanZero(int n) {
+	public static int numberGreaterThanZero(int n) {
 		if (n < 1)
 			throw new IllegalArgumentException();
 
@@ -116,7 +116,7 @@ public class Percolation {
 
 	private void isValidIndex(int i) {
 		if (i < 1 || i > n)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("row/column=" + i);
 	}
 
 }
