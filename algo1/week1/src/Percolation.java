@@ -3,39 +3,44 @@ import static java.util.Arrays.fill;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-	private final int                  n;
+	private final int                  n, upSentinal;
 	private final WeightedQuickUnionUF uf;
 	private final boolean[]            blocked;
 	private int                        openSites;
 
 	public Percolation(int n) {
-		this.n = n;
+		this.n = numberGreaterThanZero(n);
+		this.upSentinal = n * n;
 		this.uf = new WeightedQuickUnionUF(n * n + 2);
 		this.blocked = blocked(n * n + 2);
 	}
 
 	public void open(int i, int j) {
-		int index = index(i, j);
+		isValidIndex(i, j);
 
 		if (isOpen(i, j))
 			return;
 
-		blocked[index] = false;
+		blocked[index(i, j)] = false;
 		openSites++;
 
 		tryConnectUp(i, j);
 		tryConnectLeft(i, j);
 		tryConnectRight(i, j);
 		tryConnectDown(i, j);
-		
+
 	}
 
 	public boolean isOpen(int i, int j) {
+		isValidIndex(i, j);
+
 		return !blocked[index(i, j)];
 	}
 
 	public boolean isFull(int i, int j) {
-		return uf.connected(n * n, index(i, j));
+		isValidIndex(i, j);
+
+		return uf.connected(upSentinal, index(i, j));
 	}
 
 	public int numberOfOpenSites() {
@@ -43,7 +48,7 @@ public class Percolation {
 	}
 
 	public boolean percolates() {
-		return uf.connected(n * n, n * n + 1);
+		return uf.connected(upSentinal, upSentinal + 1);
 	}
 
 	private int index(int i, int j) {
@@ -95,6 +100,23 @@ public class Percolation {
 		fill(out, true);
 
 		return out;
+	}
+
+	private static int numberGreaterThanZero(int n) {
+		if (n < 1)
+			throw new IllegalArgumentException();
+
+		return n;
+	}
+
+	private void isValidIndex(int i, int j) {
+		isValidIndex(i);
+		isValidIndex(j);
+	}
+
+	private void isValidIndex(int i) {
+		if (i < 1 || i > n)
+			throw new IllegalArgumentException();
 	}
 
 }
