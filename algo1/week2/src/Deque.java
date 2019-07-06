@@ -20,13 +20,15 @@ public class Deque<T> implements Iterable<T> {
         validateData(t);
 
         Node<T> n = new Node<>(t);
-        if (isNull(front))
+
+        if (isEmpty())
             front = back = n;
         else {
             n.next = front;
             front.prev = n;
             front = n;
         }
+
         size++;
     }
 
@@ -35,7 +37,7 @@ public class Deque<T> implements Iterable<T> {
 
         Node<T> n = new Node<>(t);
 
-        if (isNull(back))
+        if (isEmpty())
             front = back = n;
         else {
             n.prev = back;
