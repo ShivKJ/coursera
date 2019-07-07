@@ -1,4 +1,5 @@
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Math.min;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.sort;
@@ -75,6 +76,15 @@ public final class Merging {
         }
     }
 
+    public static void mergeSortBottomUp(int[] arr) {
+        int n = arr.length;
+
+        for (int w = 1; w < n; w *= 2)
+            for (int p = 0; p < n - w; p += 2 * w)
+                mergingSortedArrayClean(arr, p, p + w - 1, min(p + 2 * w - 1, n - 1));
+
+    }
+
     public static void main(String[] args) {
         System.out.println(Arrays.toString(mergingSortedArray(new int[] { -1, 2, 10, 15 }, new int[] { -1, 4, 5, 10, 20 })));
         int[] c = { -1, 2, 10, 15, -1, 4, 5, 10, 20 };
@@ -86,7 +96,8 @@ public final class Merging {
         int[] sorted = c.clone();
         sort(sorted);
 
-        mergeSort(c, 0, c.length - 1);
+//        mergeSort(c, 0, c.length - 1);
+        mergeSortBottomUp(c);
         System.out.println(Arrays.equals(sorted, c));
     }
 }
