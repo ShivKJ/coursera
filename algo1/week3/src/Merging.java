@@ -34,9 +34,9 @@ public final class Merging {
         for (int idx = p, i1 = 0, i2 = q + 1 - p; idx <= r; idx++) {
             int index;
 
-            if (i1 == q - p + 1)
+            if (i1 > q - p)
                 index = i2++;
-            else if (i2 == r - p + 1)
+            else if (i2 > r - p)
                 index = i1++;
             else if (tmp[i1] <= tmp[i2])
                 index = i1++;
@@ -54,9 +54,9 @@ public final class Merging {
 
         arraycopy(arr, p, tmp, 0, q - p + 1);
         arraycopy(arr, q + 1, tmp, q - p + 2, r - q);
-        
+
         tmp[q - p + 1] = tmp[r - p + 2] = MAX_VALUE;
-        
+
         for (int idx = p, i1 = 0, i2 = q - p + 2; idx <= r; idx++)
             arr[idx] = tmp[i1] < tmp[i2] ? tmp[i1++] : tmp[i2++];
 
@@ -70,7 +70,8 @@ public final class Merging {
             mergeSort(arr, p, mid);
             mergeSort(arr, mid + 1, q);
 
-            mergingSortedArrayClean(arr, p, mid, q);
+            if (arr[mid] > arr[mid + 1])
+                mergingSortedArrayClean(arr, p, mid, q);
         }
     }
 
@@ -81,7 +82,7 @@ public final class Merging {
         c = new int[] { -1, 2, 10, 15, -1, 4, 5, 10, 20 };
         mergingSortedArrayClean(c, 0, 3, c.length - 1);
 
-        c = new Random().ints(10000, 0, 1000).toArray();
+        c = new Random().ints(100000, 0, 1000).toArray();
         int[] sorted = c.clone();
         sort(sorted);
 
