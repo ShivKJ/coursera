@@ -11,7 +11,9 @@
 
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Integer.compare;
+import static java.lang.Math.hypot;
 import static java.util.Comparator.comparingDouble;
+import static java.util.Objects.hash;
 
 import java.util.Comparator;
 
@@ -65,7 +67,7 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        if (y == that.y && x == that.x)
+        if (this.equals(that))
             return NEGATIVE_INFINITY;
 
         return (1. * y - that.x) / (x - that.x);
@@ -109,6 +111,25 @@ public class Point implements Comparable<Point> {
     public String toString() {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";
+    };
+
+    public double distance(Point p) {
+        return hypot(x - p.x, y - p.y);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Point) {
+            Point o = (Point) obj;
+            return o.x == x && o.y == y;
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return hash(x, y);
     }
 
     /**
