@@ -6,28 +6,28 @@ import java.util.Arrays;
 
 public final class Merging {
 
-    public static int[] mergingSortedArray(int[] a, int[] b) {
-        int[] c = new int[a.length + b.length];
+    public static int[] mergingSortedArray(int[] arr1, int[] arr2) {
+        int[] out = new int[arr1.length + arr2.length];
 
-        for (int i = 0, j = 0, idx = 0; idx < c.length;) {
-            c[idx++] = a[i] < b[j] ? a[i++] : b[j++];
+        for (int i = 0, j = 0, idx = 0; idx < out.length;) {
+            out[idx++] = arr1[i] < arr2[j] ? arr1[i++] : arr2[j++];
 
-            if (i == a.length) {
-                arraycopy(b, j, c, idx, b.length - j);
-                idx += b.length - j;
+            if (i == arr1.length) {
+                arraycopy(arr2, j, out, idx, arr2.length - j);
+                idx += arr2.length - j;
             }
 
-            if (j == b.length) {
-                arraycopy(a, i, c, idx, a.length - i);
-                idx += a.length - i;
+            if (j == arr2.length) {
+                arraycopy(arr1, i, out, idx, arr1.length - i);
+                idx += arr1.length - i;
             }
         }
 
-        return c;
+        return out;
     }
 
-    public static int[] mergingSortedArrayDirty(int[] a, int p, int q, int r) {
-        int[] b = copyOfRange(a, p, r + 1);
+    public static int[] mergingSortedArrayDirty(int[] arr, int p, int q, int r) {
+        int[] tmp = copyOfRange(arr, p, r + 1);
 
         for (int idx = p, i1 = 0, i2 = q + 1 - p; idx <= r; idx++) {
             int index;
@@ -36,30 +36,30 @@ public final class Merging {
                 index = i2++;
             else if (i2 == r - p + 1)
                 index = i1++;
-            else if (b[i1] <= b[i2])
+            else if (tmp[i1] <= tmp[i2])
                 index = i1++;
             else
                 index = i2++;
 
-            a[idx] = b[index];
+            arr[idx] = tmp[index];
         }
 
-        return a;
+        return arr;
     }
 
-    public static int[] mergingSortedArrayClean(int[] a, int p, int q, int r) {
-        int[] b = new int[r - p + 3];
+    public static int[] mergingSortedArrayClean(int[] arr, int p, int q, int r) {
+        int[] tmp = new int[r - p + 3];
 
-        arraycopy(a, p, b, 0, q - p + 1);
-        arraycopy(a, q + 1, b, q - p + 2, r - q);
+        arraycopy(arr, p, tmp, 0, q - p + 1);
+        arraycopy(arr, q + 1, tmp, q - p + 2, r - q);
 
-        b[q - p + 1] = MAX_VALUE;
-        b[r - p + 2] = MAX_VALUE;
+        tmp[q - p + 1] = MAX_VALUE;
+        tmp[r - p + 2] = MAX_VALUE;
 
         for (int idx = p, i1 = 0, i2 = q - p + 1; idx <= r; idx++)
-            a[idx] = b[i1] < b[i2] ? b[i1++] : b[i2++];
+            arr[idx] = tmp[i1] < tmp[i2] ? tmp[i1++] : tmp[i2++];
 
-        return a;
+        return arr;
     }
 
     public static void main(String[] args) {
