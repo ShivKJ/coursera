@@ -80,9 +80,11 @@ public final class Merging {
         int n = arr.length;
 
         for (int w = 1; w < n; w *= 2)
-            for (int p = 0; p < n - w; p += 2 * w)
-                mergingSortedArrayClean(arr, p, p + w - 1, min(p + 2 * w - 1, n - 1));
-
+            for (int p = 0; p < n - w; p += 2 * w) {
+                int mid = p + w - 1;
+                if (arr[mid] > arr[mid + 1])
+                    mergingSortedArrayClean(arr, p, mid, min(mid + w, n - 1));
+            }
     }
 
     public static void main(String[] args) {
@@ -96,8 +98,9 @@ public final class Merging {
         int[] sorted = c.clone();
         sort(sorted);
 
-//        mergeSort(c, 0, c.length - 1);
+        // mergeSort(c, 0, c.length - 1);
         mergeSortBottomUp(c);
         System.out.println(Arrays.equals(sorted, c));
+
     }
 }
