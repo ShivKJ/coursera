@@ -1,8 +1,10 @@
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOfRange;
+import static java.util.Arrays.sort;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public final class Merging {
 
@@ -52,14 +54,24 @@ public final class Merging {
 
         arraycopy(arr, p, tmp, 0, q - p + 1);
         arraycopy(arr, q + 1, tmp, q - p + 2, r - q);
-
-        tmp[q - p + 1] = MAX_VALUE;
-        tmp[r - p + 2] = MAX_VALUE;
-
-        for (int idx = p, i1 = 0, i2 = q - p + 1; idx <= r; idx++)
+        
+        tmp[q - p + 1] = tmp[r - p + 2] = MAX_VALUE;
+        
+        for (int idx = p, i1 = 0, i2 = q - p + 2; idx <= r; idx++)
             arr[idx] = tmp[i1] < tmp[i2] ? tmp[i1++] : tmp[i2++];
 
         return arr;
+    }
+
+    public static void mergeSort(int[] arr, int p, int q) {
+        if (p < q) {
+            int mid = (p + q) >> 1;
+
+            mergeSort(arr, p, mid);
+            mergeSort(arr, mid + 1, q);
+
+            mergingSortedArrayClean(arr, p, mid, q);
+        }
     }
 
     public static void main(String[] args) {
@@ -68,5 +80,12 @@ public final class Merging {
         System.out.println(Arrays.toString(mergingSortedArrayDirty(c, 0, 3, c.length - 1)));
         c = new int[] { -1, 2, 10, 15, -1, 4, 5, 10, 20 };
         mergingSortedArrayClean(c, 0, 3, c.length - 1);
+
+        c = new Random().ints(10000, 0, 1000).toArray();
+        int[] sorted = c.clone();
+        sort(sorted);
+
+        mergeSort(c, 0, c.length - 1);
+        System.out.println(Arrays.equals(sorted, c));
     }
 }
