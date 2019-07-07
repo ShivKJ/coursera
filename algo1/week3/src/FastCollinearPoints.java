@@ -10,7 +10,6 @@ import java.util.List;
 
 public class FastCollinearPoints {
     private final Point[] points;
-    private int           numberOfSegments;
     private LineSegment[] lineSegments;
 
     public FastCollinearPoints(Point[] points) {
@@ -42,7 +41,7 @@ public class FastCollinearPoints {
             sort(points, p.slopeOrder().thenComparingInt(o -> o == p ? -1 : 1));
 
             stream(points).skip(1)// skipping the "p" Point.
-                          .collect(groupingBy(p::slopeTo))
+                          .collect(groupingBy(p::slopeTo))// as po
                           .values()
                           .stream()
                           .filter(ps -> ps.size() == 3)
@@ -53,11 +52,10 @@ public class FastCollinearPoints {
         }
 
         this.lineSegments = output.toArray(LineSegment[]::new);
-        this.numberOfSegments = this.lineSegments.length;
     }
 
     public int numberOfSegments() {
-        return numberOfSegments;
+        return lineSegments.length;
 
     }
 
