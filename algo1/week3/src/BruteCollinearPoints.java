@@ -1,9 +1,13 @@
 import static java.lang.Double.isInfinite;
 import static java.lang.Math.abs;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
+import static java.util.Collections.max;
+import static java.util.Collections.min;
 import static java.util.Objects.isNull;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,20 +61,8 @@ public class BruteCollinearPoints {
     }
 
     private static LineSegment getLineSeg(Point... pts) {
-        double maxDis = 0;
-        Point a = null, b = null;;
-
-        for (int i = 0; i < pts.length; i++)
-            for (int j = i; j < pts.length; j++) {
-                double d = pts[i].distance(pts[j]);
-                if (d >= maxDis) {
-                    a = pts[i];
-                    b = pts[j];
-
-                    maxDis = d;
-                }
-            }
-        return new LineSegment(a, b);
+        Collection<Point> points = asList(pts);
+        return new LineSegment(min(points), max(points));
     }
 
     public int numberOfSegments() {

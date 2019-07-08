@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Integer.compare;
 import static java.lang.Math.hypot;
 import static java.util.Comparator.comparingDouble;
@@ -70,6 +71,9 @@ public class Point implements Comparable<Point> {
         if (this.equals(that))
             return NEGATIVE_INFINITY;
 
+        if (x == that.x)
+            return POSITIVE_INFINITY;
+        
         return (1. * y - that.x) / (x - that.x);
 
     }
