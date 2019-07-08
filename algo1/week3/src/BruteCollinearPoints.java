@@ -1,3 +1,4 @@
+import static java.lang.Double.isInfinite;
 import static java.lang.Math.abs;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
@@ -31,18 +32,25 @@ public class BruteCollinearPoints {
 
     private void process() {
         int n = points.length;
-        
+
         List<LineSegment> lineSegments = new LinkedList<>();
 
         for (int i = 0; i < n; i++)
             for (int j = i; j < n; j++) {
-                double slope = points[i].slopeTo(points[j]);
-            
-                for (int k = j; k < n; k++)
-                    for (int l = k; l < n; l++)
-                        if (abs(slope - points[k].slopeTo(points[l])) <= 10e-8)
-                            lineSegments.add(getLineSeg(points[i], points[j], points[k], points[l]));
+                double s1 = points[i].slopeTo(points[j]);
+                boolean isInf = isInfinite(s1);
 
+                for (int k = j; k < n; k++)
+                    for (int l = k; l < n; l++) {
+                        double s2 = points[k].slopeTo(points[l]);
+
+                        if ((isInf && isInfinite(s2)) || abs(s1 - s2) <= 10e-8) {
+                            LineSegment ls = getLineSeg(points[i], points[j], points[k], points[l]);
+
+                            if (!lineSegments.contains(ls))
+                                lineSegments.add(ls);
+                        }
+                    }
             }
 
         this.lineSegments = lineSegments.toArray(LineSegment[]::new);
@@ -54,9 +62,12 @@ public class BruteCollinearPoints {
 
         for (int i = 0; i < pts.length; i++)
             for (int j = i; j < pts.length; j++) {
-                if (pts[i].distance(pts[j]) >= maxDis) {
+                double d = pts[i].distance(pts[j]);
+                if (d >= maxDis) {
                     a = pts[i];
                     b = pts[j];
+
+                    maxDis = d;
                 }
             }
         return new LineSegment(a, b);
