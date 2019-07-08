@@ -8,7 +8,9 @@ import static java.util.stream.Collectors.groupingBy;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FastCollinearPoints {
+public final class FastCollinearPoints {
+    private final static int MIN_PT_ON_LINE = 4;
+
     private final Point[] points;
     private LineSegment[] lineSegments;
 
@@ -19,7 +21,7 @@ public class FastCollinearPoints {
 
     private static Point[] checkInput(Point[] points) {
 
-        if (isNull(points) || points.length < 4)
+        if (isNull(points) || points.length < MIN_PT_ON_LINE)
             throw new IllegalArgumentException();
 
         sort(points);
@@ -44,7 +46,7 @@ public class FastCollinearPoints {
                           .collect(groupingBy(p::slopeTo))// as po
                           .values()
                           .stream()
-                          .filter(ps -> ps.size() == 3)
+                          .filter(ps -> ps.size() < MIN_PT_ON_LINE)
                           .map(ps -> ps.stream().max(comparingDouble(p::distance)).get())
                           .map(pt -> new LineSegment(p, pt))
                           .filter(ls -> !output.contains(ls))
