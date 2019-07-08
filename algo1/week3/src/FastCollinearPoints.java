@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+
 public final class FastCollinearPoints {
     private final static int MIN_PT_ON_LINE = 4;
 
@@ -50,7 +54,7 @@ public final class FastCollinearPoints {
                     sameSlopePoints.add(points[j++]);
                 while (j < points.length && slope == (s = p.slopeTo(points[j])));
 
-                if (sameSlopePoints.size() == MIN_PT_ON_LINE - 1) {
+                if (sameSlopePoints.size() >= MIN_PT_ON_LINE) {
                     sameSlopePoints.add(p);
                     output.add(new LineSegment(min(sameSlopePoints), max(sameSlopePoints)));
                 }
@@ -69,5 +73,35 @@ public final class FastCollinearPoints {
 
     public LineSegment[] segments() {
         return lineSegments;
+    }
+
+    public static void main(String[] args) {
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
     }
 }
