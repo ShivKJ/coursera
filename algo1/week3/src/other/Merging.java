@@ -1,3 +1,4 @@
+package other;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.min;
 import static java.lang.System.arraycopy;

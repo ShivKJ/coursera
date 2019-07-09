@@ -1,3 +1,5 @@
+import static java.util.Objects.hash;
+
 /*************************************************************************
  *  Compilation:  javac LineSegment.java
  *  Execution:    none
@@ -48,25 +50,21 @@ public class LineSegment {
         return p + " -> " + q;
     }
 
-    /**
-     * Throws an exception if called. The hashCode() method is not supported because
-     * hashing has not yet been introduced in this course. Moreover, hashing does not
-     * typically lead to good *worst-case* performance guarantees, as required on this
-     * assignment.
-     *
-     * @throws UnsupportedOperationException if called
-     */
+    @Override
     public int hashCode() {
-        throw new UnsupportedOperationException();
+        return hash(p, q);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof LineSegment) {
-            LineSegment ls = (LineSegment) obj;
-            return (ls.p.equals(p) && ls.q.equals(q)) || (ls.q.equals(p) && ls.p.equals(q));
-        }
-        return super.equals(obj);
+        if (this == obj)
+            return true;
+        if (!(obj instanceof LineSegment))
+            return false;
+
+        LineSegment other = (LineSegment) obj;
+
+        return p.equals(other.p) && q.equals(other.q);
     }
 
 }

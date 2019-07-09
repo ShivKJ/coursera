@@ -9,11 +9,17 @@
  *
  ******************************************************************************/
 
+//import static java.lang.Double.NEGATIVE_INFINITY;
+//import static java.lang.Double.POSITIVE_INFINITY;
+//import static java.lang.Integer.compare;
+//import static java.lang.Math.hypot;
+//import static java.util.Comparator.comparingDouble;
+//import static java.util.Objects.hash;
+
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
+import static java.lang.Double.compare;
 import static java.lang.Integer.compare;
-import static java.lang.Math.hypot;
-import static java.util.Comparator.comparingDouble;
 import static java.util.Objects.hash;
 
 import java.util.Comparator;
@@ -68,13 +74,16 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        if (this.equals(that))
+        if (x == that.x && y == that.y)
             return NEGATIVE_INFINITY;
 
         if (x == that.x)
             return POSITIVE_INFINITY;
-        
-        return (1. * y - that.x) / (x - that.x);
+
+        if (y == that.y)
+            return +0;
+
+        return (that.y - 1. * y) / (that.x - x);
 
     }
 
@@ -91,6 +100,7 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
+
         int comp = compare(y, that.y);
         return comp != 0 ? comp : compare(x, that.x);
     }
@@ -102,7 +112,7 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        return comparingDouble(this::slopeTo);
+        return (x, y) -> compare(slopeTo(x), slopeTo(y));
     }
 
     /**
@@ -115,20 +125,6 @@ public class Point implements Comparable<Point> {
     public String toString() {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";
-    };
-
-    public double distance(Point p) {
-        return hypot(x - p.x, y - p.y);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Point) {
-            Point o = (Point) obj;
-            return o.x == x && o.y == y;
-        }
-
-        return false;
     }
 
     @Override
@@ -136,10 +132,17 @@ public class Point implements Comparable<Point> {
         return hash(x, y);
     }
 
-    /**
-     * Unit tests the Point data type.
-     */
-    public static void main(String[] args) {
-        /* YOUR CODE HERE */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        
+        if (!(obj instanceof Point))
+            return false;
+        
+        Point other = (Point) obj;
+        
+        return x == other.x && y == other.y;
     }
+
 }
