@@ -3,7 +3,7 @@ package other;
 import static java.lang.Math.min;
 import static java.util.Arrays.copyOfRange;
 
-public final class LongestPenlindromeSubString {
+public final class LongestPalindromicSubString {
     public static String search(String string) {
         return search(string.toCharArray());
     }
