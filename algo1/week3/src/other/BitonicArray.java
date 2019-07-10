@@ -11,8 +11,8 @@ public final class BitonicArray {
 
     public static int search(int[] arr, int k, int from, int to) {
 
-        if (from > to)// base case
-            return -1;
+        if (from == to)// base case
+            return arr[from] == k ? from : -1;
 
         int mid = (from + to) >> 1;
         int e = arr[mid];
