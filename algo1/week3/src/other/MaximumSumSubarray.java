@@ -53,17 +53,25 @@ public final class MaximumSumSubarray {
         return new Chunk(leftIndex, rightIndex, leftSum + rightSum);
     }
 
-    private final static class Chunk {
-        final int fromIdx, toIdx, sum;
+    public final static class Chunk {
+        private final int fromIdx, toIdx, sum;
 
-        Chunk(int fromIdx, int toIdx, int sum) {
+        private Chunk(int fromIdx, int toIdx, int sum) {
             this.fromIdx = fromIdx;
             this.toIdx = toIdx;
             this.sum = sum;
         }
 
-        int sum() {
+        public int sum() {
             return sum;
+        }
+
+        public int leftIndex() {
+            return fromIdx;
+        }
+
+        public int rightIndex() {
+            return toIdx;
         }
 
         @Override
