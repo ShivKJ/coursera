@@ -1,6 +1,7 @@
 package other;
 
 import static java.lang.Math.min;
+import static java.lang.String.copyValueOf;
 import static java.util.Arrays.copyOfRange;
 
 public final class LongestPalindromicSubString {
@@ -9,10 +10,19 @@ public final class LongestPalindromicSubString {
     }
 
     public static String search(char[] str) {
-        return null;
+        int[] arr = { 0, 0 };
+
+        for (int i = 1; i < str.length - 1; i++) {
+            int[] a = search(str, i);
+
+            if (a[1] - a[0] > arr[1] - arr[0])
+                arr = a;
+        }
+
+        return copyValueOf(copyOfRange(str, arr[0], arr[1] + 1));
     }
 
-    public static char[] search(char[] str, int idx) {
+    public static int[] search(char[] str, int idx) {
         int n = str.length, w = min(idx, n - idx - 1);
 
         int a = search(str, idx, idx, w);
@@ -29,7 +39,7 @@ public final class LongestPalindromicSubString {
             }
         }
 
-        return copyOfRange(str, left, right + 1);
+        return new int[] { left, right };
     }
 
     public static int search(char[] arr, int left, int right, int w) {
@@ -42,13 +52,9 @@ public final class LongestPalindromicSubString {
                 break;
 
         return expansion;
-//        return copyOfRange(arr, left - expansion, right + expansion + 1);
     }
 
     public static void main(String[] args) {
-//        System.out.println(search("abcdcba".toCharArray(), 3));
-//        System.out.println(search("abcddcba".toCharArray(), 3));
-//        System.out.println(search("abcdefgabcddcba".toCharArray(), 10));
-        System.out.println(search("abcddc".toCharArray(), 3));
+        System.out.println(search("abcddc"));
     }
 }
