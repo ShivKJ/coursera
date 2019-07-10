@@ -17,30 +17,21 @@ public final class BitonicArray {
         int mid = (from + to) >> 1;
         int e = arr[mid];
 
-        if (k < e) {
+        if (k < e)
             if (arr[mid - 1] < arr[mid]) {
 
                 int index = binarySearch(arr, from, mid, k);// mid is exclusive here
 
-                if (index > -1)
-                    return index;
+                return index > -1 ? index : search(arr, k, mid + 1, to);
 
-                return search(arr, k, mid + 1, to);
             } else {
                 int index = reverseBinarySearch(arr, k, mid + 1, to);
 
-                if (index > -1)
-                    return index;
-
-                return search(arr, k, from, mid - 1);
+                return index > -1 ? index : search(arr, k, from, mid - 1);
             }
-
-        } else if (k > e) {
-            if (arr[mid - 1] < arr[mid])
-                return search(arr, k, mid + 1, to);
-
-            return search(arr, k, from, mid - 1);
-        } else
+        else if (k > e)
+            return arr[mid - 1] < arr[mid] ? search(arr, k, mid + 1, to) : search(arr, k, from, mid - 1);
+        else
             return mid;
 
     }
