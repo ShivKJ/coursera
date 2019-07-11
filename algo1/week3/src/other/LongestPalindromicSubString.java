@@ -1,60 +1,56 @@
 package other;
 
-import static java.lang.Math.min;
 import static java.lang.String.copyValueOf;
 import static java.util.Arrays.copyOfRange;
 
 public final class LongestPalindromicSubString {
-    public static String search(String string) {
-        return search(string.toCharArray());
+    public static String longestPalindrome(String string) {
+        return string.isEmpty() ? string : search(string.toCharArray());
     }
 
-    public static String search(char[] str) {
+    private static String search(char[] str) {
         int[] arr = { 0, 0 };
 
-        for (int i = 1; i < str.length - 1; i++) {
-            int[] a = search(str, i);
+        for (int i = 0; i < str.length; i++) {
+            int[] a = largestPelindromeAround(str, i);
 
-            if (a[1] - a[0] > arr[1] - arr[0])
+            if (isGreater(a, arr))
                 arr = a;
         }
 
         return copyValueOf(copyOfRange(str, arr[0], arr[1] + 1));
     }
 
-    public static int[] search(char[] str, int idx) {
-        int n = str.length, w = min(idx, n - idx - 1);
+    private static boolean isGreater(int[] a, int[] b) {
+        return a[1] - a[0] > b[1] - b[0];
+    }
 
-        int a = search(str, idx, idx, w);
+    private static int[] largestPelindromeAround(char[] str, int idx) {
+        int[] a = pelindromeExpansion(str, idx, idx);
 
-        int left = idx - a, right = idx + a;
+        if (idx < str.length - 1 && str[idx] == str[idx + 1]) {
+            int[] b = pelindromeExpansion(str, idx, idx + 1);
 
-        if (str[idx] == str[idx + 1]) {
-            w = min(n - idx - 2, w);
-            int b = search(str, idx, idx + 1, w);
+            if (isGreater(b, a))
+                a = b;
 
-            if (a < b) {
-                left = idx - b;
-                right = idx + b + 1;
-            }
+        }
+
+        return a;
+    }
+
+    private static int[] pelindromeExpansion(char[] arr, int left, int right) {
+        int n = arr.length;
+
+        while (left > 0 && right < n - 1 && arr[left - 1] == arr[right + 1]) {
+            left--;
+            right++;
         }
 
         return new int[] { left, right };
     }
 
-    public static int search(char[] arr, int left, int right, int w) {
-        int expansion = 0;
-
-        for (int i = 1; i <= w; i++)
-            if (arr[left - i] == arr[right + i])
-                expansion++;
-            else
-                break;
-
-        return expansion;
-    }
-
     public static void main(String[] args) {
-        System.out.println(search("abcddc"));
+        System.out.println(longestPalindrome("babad"));
     }
 }
