@@ -7,7 +7,7 @@ import static java.util.Arrays.fill;
 public final class Rodcutting {
     private static final int UNASSIGNED = -1;
 
-    public static int rodcutting(int[] p) {
+    public static int rodcuttingBottomUp(int[] p) {
         int n = p.length;
 
         int[] r = new int[n];
@@ -43,7 +43,7 @@ public final class Rodcutting {
     }
 
     public static void main(String[] args) {
-        out.println(rodcutting(new int[] { 1, 5, 8, 9, 10, 17, 17, 20, 24, 30 }));
+        out.println(rodcuttingBottomUp(new int[] { 1, 5, 8, 9, 10, 17, 17, 20, 24, 30 }));
         out.println(rodcuttingMemoized(new int[] { 1, 5, 8, 9, 10, 17, 17, 20, 24, 30 }));
     }
 }
