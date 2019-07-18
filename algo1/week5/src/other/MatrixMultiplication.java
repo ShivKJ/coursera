@@ -8,7 +8,8 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 public final class MatrixMultiplication {
-    private static final int UNASSIGNED = MAX_VALUE;
+    private static final int     UNASSIGNED   = MAX_VALUE;
+    private static final boolean PRINT_MATRIX = true;
 
     public static long numberOfParamthesis(int n) {
         long[] p = new long[n];
@@ -29,7 +30,11 @@ public final class MatrixMultiplication {
 
         int out = operations(dim, dp, 0, n - 1);
 
-        print(dp);
+        if (PRINT_MATRIX) {
+            System.out.println("=================Printing Matrix=======================");
+            print(dp);
+            System.out.println("=======================================================");
+        }
 
         return out;
     }
@@ -58,18 +63,35 @@ public final class MatrixMultiplication {
         return dp[i][j] = out;
     }
 
+    public static int operationsDPInPlace(int[] dim) {
+        int n = dim.length - 1;
+        int[][] dp = new int[n][n];
+
+        stream(dp).forEach(p -> fill(p, MAX_VALUE));
+
+        for (int j = 0; j < n; j++) {
+            dp[j][j] = 0;
+
+            for (int i = j - 1; i >= 0; i--)
+                for (int k = i; k < j; k++)
+                    dp[i][j] = min(dp[i][j], matrixMult(dim, i, k, j) + dp[i][k] + dp[k + 1][j]);
+        }
+        
+        if (PRINT_MATRIX) {
+            System.out.println("=================Printing Matrix=======================");
+            print(dp);
+            System.out.println("=======================================================");
+        }
+
+        return dp[0][n - 1];
+    }
+
     public static void main(String[] args) {
         System.out.println(operations(new int[] { 30, 35, 15, 5, 10, 20, 25 }));
+        System.out.println(operationsDPInPlace(new int[] { 30, 35, 15, 5, 10, 20, 25 }));
     }
 
     private static void print(int[][] arr) {
-        arr = stream(arr).map(int[]::clone).toArray(int[][]::new);
-
-        for (int i = 0; i < arr.length; i++)
-            for (int j = 0; j < arr.length; j++)
-                if (arr[i][j] == UNASSIGNED)
-                    arr[i][j] = 0;
-
         System.out.println(stream(arr).map(MatrixMultiplication::print).collect(joining("\n")));;
     }
 
@@ -79,7 +101,7 @@ public final class MatrixMultiplication {
     }
 
     private static String print(int i) {
-        return format("%-10d", i);
+        return i == UNASSIGNED ? format("%-10s", "-") : format("%-10d", i);
     }
 
 }
