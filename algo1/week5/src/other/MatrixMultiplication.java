@@ -8,7 +8,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 public final class MatrixMultiplication {
-    private static final int     UNASSIGNED   = MAX_VALUE;
     private static final boolean PRINT_MATRIX = true;
 
     public static long combinationOfParamthesis(int n) {
@@ -39,7 +38,7 @@ public final class MatrixMultiplication {
         int n = dim.length - 1;
         int[][] dp = new int[n][n];
 
-        stream(dp).forEach(p -> fill(p, UNASSIGNED));
+        stream(dp).forEach(p -> fill(p, MAX_VALUE));
 
         int out = operations(dim, dp, 0, n - 1);
 
@@ -84,7 +83,7 @@ public final class MatrixMultiplication {
      * @return
      */
     private static int operations(int[] dim, int[][] dp, int i, int j) {
-        if (dp[i][j] != UNASSIGNED)
+        if (dp[i][j] != MAX_VALUE)
             return dp[i][j];
 
         int out;
@@ -144,7 +143,7 @@ public final class MatrixMultiplication {
     }
 
     private static String print(int i) {
-        return i == UNASSIGNED ? format("%-10s", "-") : format("%-10d", i);
+        return i == MAX_VALUE ? format("%-10s", "-") : format("%-10d", i);
     }
 
 }
