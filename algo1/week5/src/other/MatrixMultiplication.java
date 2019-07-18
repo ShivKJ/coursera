@@ -11,7 +11,7 @@ public final class MatrixMultiplication {
     private static final int     UNASSIGNED   = MAX_VALUE;
     private static final boolean PRINT_MATRIX = true;
 
-    public static long numberOfParamthesis(int n) {
+    public static long combinationOfParamthesis(int n) {
         long[] p = new long[n];
         p[0] = 1;
 
@@ -22,6 +22,19 @@ public final class MatrixMultiplication {
         return p[n - 1];
     }
 
+    /**
+     * dim is dimension of matrices.
+     * 
+     * if dim = [1,5,3,2]
+     * then we have 3 matrices having dim
+     * 1 X 5, 5 X 3, 3 X 2.
+     * 
+     * task is to find minimum number of multiplication
+     * required when multiplying all such matrices.
+     * 
+     * @param dim
+     * @return
+     */
     public static int operations(int[] dim) {
         int n = dim.length - 1;
         int[][] dp = new int[n][n];
@@ -30,19 +43,46 @@ public final class MatrixMultiplication {
 
         int out = operations(dim, dp, 0, n - 1);
 
-        if (PRINT_MATRIX) {
-            System.out.println("=================Printing Matrix=======================");
+        if (PRINT_MATRIX)
             print(dp);
-            System.out.println("=======================================================");
-        }
 
         return out;
     }
 
+    /**
+     * dim is dimension of matrices.
+     * 
+     * if dim = [1,5,3,2]
+     * then we have 3 matrices having dim
+     * 1 X 5, 5 X 3, 3 X 2.
+     * 
+     * task is to find number of multiplication
+     * from two matrices formed from combining matrices
+     * from i to k and k+1 to j.
+     * 
+     * matrix[i].row    = dim[i]
+     * matrix[i].column = dim[i+1] 
+     * 
+     * @param dim
+     * @param i
+     * @param k
+     * @param j
+     * @return
+     */
     private static int matrixMult(int[] dim, int i, int k, int j) {
         return dim[i] * dim[k + 1] * dim[j + 1];
     }
 
+    /**
+     * finds number of multiplication required for 
+     * multiplying i_th matrix to j_th one.
+     *  
+     * @param dim
+     * @param dp
+     * @param i
+     * @param j
+     * @return
+     */
     public static int operations(int[] dim, int[][] dp, int i, int j) {
         if (dp[i][j] != UNASSIGNED)
             return dp[i][j];
@@ -62,8 +102,12 @@ public final class MatrixMultiplication {
 
         return dp[i][j] = out;
     }
-
-    public static int operationsDPInPlace(int[] dim) {
+    /**
+     * @see #operations(int[])
+     * @param dim
+     * @return
+     */
+    public static int operationsBottomUp(int[] dim) {
         int n = dim.length - 1;
         int[][] dp = new int[n][n];
 
@@ -76,28 +120,26 @@ public final class MatrixMultiplication {
                 for (int k = i; k < j; k++)
                     dp[i][j] = min(dp[i][j], matrixMult(dim, i, k, j) + dp[i][k] + dp[k + 1][j]);
         }
-        
-        if (PRINT_MATRIX) {
-            System.out.println("=================Printing Matrix=======================");
+
+        if (PRINT_MATRIX)
             print(dp);
-            System.out.println("=======================================================");
-        }
 
         return dp[0][n - 1];
     }
 
     public static void main(String[] args) {
         System.out.println(operations(new int[] { 30, 35, 15, 5, 10, 20, 25 }));
-        System.out.println(operationsDPInPlace(new int[] { 30, 35, 15, 5, 10, 20, 25 }));
+        System.out.println(operationsBottomUp(new int[] { 30, 35, 15, 5, 10, 20, 25 }));
     }
 
     private static void print(int[][] arr) {
+        System.out.println("=====================Matrix============================");
         System.out.println(stream(arr).map(MatrixMultiplication::print).collect(joining("\n")));;
+        System.out.println("=======================================================");
     }
 
     private static String print(int[] p) {
-        return stream(p).mapToObj(MatrixMultiplication::print)
-                        .collect(joining(""));
+        return stream(p).mapToObj(MatrixMultiplication::print).collect(joining());
     }
 
     private static String print(int i) {
