@@ -83,7 +83,7 @@ public final class MatrixMultiplication {
      * @param j
      * @return
      */
-    public static int operations(int[] dim, int[][] dp, int i, int j) {
+    private static int operations(int[] dim, int[][] dp, int i, int j) {
         if (dp[i][j] != UNASSIGNED)
             return dp[i][j];
 
@@ -102,6 +102,7 @@ public final class MatrixMultiplication {
 
         return dp[i][j] = out;
     }
+
     /**
      * @see #operations(int[])
      * @param dim
