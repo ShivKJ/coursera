@@ -24,6 +24,7 @@ public class ShortestPathInBinaryMatrix {
 
         if (grid[n - 1][n - 1] == 1)
             return -1;
+
         boolean[][] notVisited = createMatrix(grid);
 
         Queue<int[]> q = new LinkedList<>();
@@ -35,7 +36,7 @@ public class ShortestPathInBinaryMatrix {
 
         while (!q.isEmpty()) {
 
-            steps++;
+            steps++;// just for submission of program. actually this line of code should be in the end of loop.
 
             int size = q.size();
 
@@ -85,7 +86,4 @@ public class ShortestPathInBinaryMatrix {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(shortestPathBinaryMatrix(new int[][] { { 0, 1 }, { 1, 0 } }));
-    }
 }
