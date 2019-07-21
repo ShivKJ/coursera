@@ -11,8 +11,22 @@ public final class FibonacciSequence {
 
         for (int i = 2; i < n; i++)
             f[i] = f[i - 1] + f[i - 2];
-        
+
         return f[n - 1];
+    }
+
+    public static int fibOrderNSpace(int n) {
+        if (n < 2)
+            return n;
+
+        int a = 0, b = 1;
+
+        for (int i = 2; i < n; i++) {
+            b += a;
+            a = b - a;
+        }
+
+        return b;
     }
 
 }
