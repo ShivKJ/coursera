@@ -1,0 +1,23 @@
+1) We should sort the number, and then for each pair we need to find element e = - pair[0]  - pair[1] using binary search.
+
+2)
+Suppose bitonic array is comprised of monotonically increasing and then monotonically decreasing sequence.
+
+Let the array be "arr" and element being searched is "e".
+
+let bitnoicSearch be function which return True if element is found.
+
+let the middle element of array is "m", lo = 0 and hi = arr.length - 1
+m_idx = lo + (hi-lo)/2
+m = arr[m_idx]
+
+if m = e , then element found.
+
+if m < e then bitonic search it in right subarray starting from m_idx to hi.
+else if right element is greater than m then binary searching it between lo and m_idx if found then returning index.
+else bitonic searhing it between m_idx and hi. 
+
+3) 
+0) Starting from lowest floor.
+1) binary search
+ 
