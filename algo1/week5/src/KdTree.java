@@ -21,8 +21,8 @@ public class KdTree {
     public KdTree() {
         this.size = 0;
 
-        this.xMin = this.yMin = Double.MIN_VALUE;
-        this.xMax = this.yMax = Double.MAX_VALUE;
+        this.xMin = this.yMin = Double.MAX_VALUE;
+        this.xMax = this.yMax = Double.MIN_VALUE;
 
     }
 
@@ -37,12 +37,12 @@ public class KdTree {
     public void insert(Point2D p) {
         updateRectContainingPoints(p);
 
-        if (root == null)
+        if (root == null) {
             this.root = new Node(p);
-        else
+            size = 1;
+        } else
             fix(p, true);
 
-        size++;
     }
 
     private void updateRectContainingPoints(Point2D p) {
@@ -80,9 +80,12 @@ public class KdTree {
             found = parent.p.equals(p);
         }
 
+        if (found)
+            return parent;
+
         Node n = null;
 
-        if (insert && !found) {
+        if (insert) {
             n = new Node(p);
 
             n.isVertical = !parent.isVertical;
@@ -92,6 +95,7 @@ public class KdTree {
             else
                 parent.right = n;
 
+            size++;
         }
 
         return n;
@@ -105,6 +109,7 @@ public class KdTree {
         StdDraw.setPenColor(StdDraw.BLACK);
 
         RectHV hv = new RectHV(xMin, yMin, xMax, yMax);
+//        RectHV hv = new RectHV(0, 0, 1, 1);
         hv.draw();
 
         draw(root, hv);
@@ -114,14 +119,12 @@ public class KdTree {
     private static void draw(Node n, RectHV hv) {
         if (n == null)
             return;
-
         StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.circle(n.p.x(), n.p.y(), 0.1);
+        StdDraw.circle(n.p.x(), n.p.y(), 0.01);
 
         if (n.isVertical) {
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(n.p.x(), hv.ymin(), n.p.x(), hv.ymax());
-
             draw(n.left, new RectHV(hv.xmin(), hv.ymin(), n.p.x(), hv.ymax()));
             draw(n.right, new RectHV(n.p.x(), hv.ymin(), hv.xmax(), hv.ymax()));
 
@@ -138,17 +141,27 @@ public class KdTree {
 
     public Iterable<Point2D> range(RectHV rect) {
         checkInputArg(rect);
+
         Collection<Point2D> out = new LinkedList<>();
         update(root, rect, out);
+
         return out;
+    }
+
+    private static boolean cross(RectHV hv, Node n) {
+        if (n.isVertical)
+            return hv.xmin() <= n.p.x() && n.p.x() <= hv.xmax();
+        else
+            return hv.ymin() <= n.p.y() && n.p.y() <= hv.ymax();
     }
 
     private static void update(Node n, RectHV hv, Collection<Point2D> data) {
         if (n == null)
             return;
 
-        if (hv.contains(n.p)) {
-            data.add(n.p);
+        if (cross(hv, n)) {
+            if (hv.contains(n.p))
+                data.add(n.p);
 
             update(n.left, hv, data);
             update(n.right, hv, data);
@@ -160,10 +173,10 @@ public class KdTree {
                 else
                     update(n.right, hv, data);
             } else {
-                if (hv.ymin() > n.p.y())
-                    update(n.right, hv, data);
-                else
+                if (hv.ymax() < n.p.y())
                     update(n.left, hv, data);
+                else
+                    update(n.right, hv, data);
             }
         }
 
@@ -179,6 +192,9 @@ public class KdTree {
         if (n == null)
             return NULL;
 
+        if (n.noChild())
+            return createEntry(n.p, n.p.distanceTo(p));
+
         Entry<Point2D, Double> middle = createEntry(n.p, n.p.distanceTo(p));
         Entry<Point2D, Double> left = n.left == null ? NULL : createEntry(n.left.p, n.left.p.distanceTo(p));
         Entry<Point2D, Double> right = n.right == null ? NULL : createEntry(n.right.p, n.right.p.distanceTo(p));
@@ -186,19 +202,19 @@ public class KdTree {
         if (inLeftOrBelow(n, p)) {
             if (n.isVertical) {
                 if (left.getValue() < n.p.x() - p.x())
-                    return left;
+                    return nearestFromNode(n.left, p);
             } else {
                 if (left.getValue() < n.p.y() - p.y())
-                    return right;
+                    return nearestFromNode(n.left, p);
             }
 
         } else {
             if (n.isVertical) {
                 if (right.getValue() < p.x() - n.p.x())
-                    return right;
+                    return nearestFromNode(n.right, p);
             } else {
                 if (right.getValue() < p.y() - n.p.y())
-                    return right;
+                    return nearestFromNode(n.right, p);
             }
         }
 
@@ -238,6 +254,10 @@ public class KdTree {
         Node(Point2D p) {
             this.p = p;
             this.isVertical = true;
+        }
+
+        boolean noChild() {
+            return left == null && right == null;
         }
 
     }
