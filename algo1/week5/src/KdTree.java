@@ -109,7 +109,6 @@ public class KdTree {
         StdDraw.setPenColor(StdDraw.BLACK);
 
         RectHV hv = new RectHV(xMin, yMin, xMax, yMax);
-//        RectHV hv = new RectHV(0, 0, 1, 1);
         hv.draw();
 
         draw(root, hv);
@@ -119,6 +118,7 @@ public class KdTree {
     private static void draw(Node n, RectHV hv) {
         if (n == null)
             return;
+        
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.circle(n.p.x(), n.p.y(), 0.01);
 
